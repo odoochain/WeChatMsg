@@ -7,7 +7,8 @@ from exporter.exporter import ExporterBase, get_new_filename, remove_privacy_inf
 
 
 class AiTxtExporter(ExporterBase):
-    last_sender = 'wxid_00112233'
+    # last_sender = 'wxid_10bgyb9gnn8r22'  # 要导出好友的wxid
+    last_sender = '46297398354@chatroom'  # 要导出好友的wxid
 
     def title(self, message: Message):
         sender = message.sender_id

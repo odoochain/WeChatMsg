@@ -28,7 +28,9 @@ def export():
     db_dir = './output/silenwoods/Msg'  # 解析后的数据库路径，例如：./db_storage
     db_version = 3  # 数据库版本，4 or 3
 
-    wxid = 'wxid_10bgyb9gnn8r22'  # 要导出好友的wxid
+    # wxid = 'wxid_10bgyb9gnn8r22'  # 要导出好友的wxid
+    wxid = '46297398354@chatroom'  # 要导出好友的wxid
+    
     output_dir = './output/data/'  # 输出文件夹
 
     conn = DatabaseConnection(db_dir, db_version)  # 创建数据库连接
@@ -91,7 +93,8 @@ def batch_export_by_fmt():
     db_dir = ''  # 解析后的数据库路径，例如：./db_storage
     db_version = 4  # 数据库版本，4 or 3
 
-    wxid = 'wxid_00112233'  # 要导出好友的wxid
+    # wxid = 'wxid_10bgyb9gnn8r22'  # 要导出好友的wxid
+    wxid = '46297398354@chatroom'  # 要导出好友的wxid
     output_dir = './data/'  # 输出文件夹
 
     conn = DatabaseConnection(db_dir, db_version)  # 创建数据库连接
