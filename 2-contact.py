@@ -37,16 +37,17 @@ with open(output_file, 'w', encoding='utf-8') as f:
         f.write(f"{contact}\n")
         contact.small_head_img_blog = database.get_avatar_buffer(contact.wxid)
         cnt += 1
-        if contact.is_chatroom:
-            f.write('-' * 60 + '\n')
+        if contact.is_chatroom() == True:
+            f.write('=' * 60 + '\n')
             chatroom_members = database.get_chatroom_members(contact.wxid)
             f.write(f"{contact.wxid} 群成员个数： {len(chatroom_members)}\n")
             for wxid, chatroom_member in chatroom_members.items():
                 chatroom_member.small_head_img_blog = database.get_avatar_buffer(wxid)
+                f.write('-' * 50 + '\n')
                 f.write(f"{chatroom_member}\n")
                 cnt += 1
 
-    f.write('=' * 80 + '\n')
+    f.write('*' * 80 + '\n')
 et = time.time()
 
 # 写入统计信息
