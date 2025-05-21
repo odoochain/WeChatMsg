@@ -15,7 +15,7 @@ import sys
 from multiprocessing import freeze_support
 
 # 添加父目录到Python路径
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+# sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from wxManager import Me
 from wxManager.decrypt import get_info_v4, get_info_v3
@@ -27,7 +27,7 @@ def dump_v3():
     """
     解析微信3.x版本的数据库
     """
-    version_list_path = '../wxManager/decrypt/version_list.json'
+    version_list_path = './wxManager/decrypt/version_list.json'
     with open(version_list_path, "r", encoding="utf-8") as f:
         version_list = json.loads(f.read())
     r_3 = get_info_v3(version_list)  # 微信3.x
