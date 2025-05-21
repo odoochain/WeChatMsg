@@ -24,6 +24,9 @@ from wxManager.decrypt import decrypt_v4, decrypt_v3
 
 
 def dump_v3():
+    # 输出目录
+    output_dir = './output'
+
     """
     解析微信3.x版本的数据库
     """
@@ -38,7 +41,7 @@ def dump_v3():
         me.wxid = wx_info.wxid
         me.name = wx_info.nick_name
         info_data = me.to_json()
-        output_dir = wx_info.wxid
+        output_dir = output_dir + '/' + wx_info.wxid
         key = wx_info.key
         if not key:
             print('error! 未找到key，请重启微信后再试')
