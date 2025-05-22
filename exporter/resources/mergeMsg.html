@@ -927,13 +927,14 @@
       }
 
       body {
+        height: 100%;
+        overflow-y: auto;
         margin: 0;
-        display: flex;
-        flex-direction: row;
-        height: 100vh;
-        align-items: center;
-        justify-content: center;
-        background-color: #f5f5f5;
+        padding: 0;
+      }
+
+      html {
+        height: 100%;
       }
 
       ::-webkit-scrollbar {
@@ -946,7 +947,12 @@
 
       ::-webkit-scrollbar-thumb {
         border-radius: 10px;
-        background: 0 0;
+        background: #888; /* 灰色滚动条 */
+      }
+
+      /* 滚动条悬停时的颜色 */
+      ::-webkit-scrollbar-thumb:hover {
+        background: #555;
       }
 
       .page {
@@ -2389,16 +2395,27 @@
         background-color: rgb(0, 0, 0);
         background-color: rgba(0, 0, 0, 0.4);
       }
-
+      .merge-msg-modal,
+      .modal-overlay {
+        position: relative;
+        display: block;
+        width: 100%;
+        height: auto;
+        background: none;
+      }
       .search-modal-content,
       .merge-msg-modal-content {
-        background-color: #fefefe;
-        margin: 5% auto;
-        /* 15% 从顶部和居中 */
+        /* Remove any fixed positioning or height */
+        position: relative;
+        width: 100%;
+        height: auto;
+        margin: 0;
         padding: 20px;
-        border: 1px solid #888;
-        width: 60%;
-        height: 80%;
+        box-sizing: border-box;
+        border: none;
+        max-width: 1200px; /* Or your preferred max width */
+        margin-left: auto;
+        margin-right: auto;
       }
 
       /* 关闭按钮 */
@@ -2426,17 +2443,16 @@
       }
 
       .modal-container {
-        /* display: flex; */
-        /* position: fixed; */
-        height: 90%;
-        overflow: hidden;
-        overflow-y: auto;
+        /* Remove height restriction and overflow handling */
+        height: auto;
+        overflow: visible;
+        /* Add some spacing if needed */
+        margin-bottom: 30px;
       }
 
       .modal-container .OnePersonmsg {
         display: flex;
-        overflow: hidden;
-        overflow-y: auto;
+        overflow: visible;
       }
 
       .search-modal-content .modal-container .OnePersonmsg:hover {
@@ -2885,12 +2901,10 @@
 
       @media screen and (max-width: 768px) {
         .merge-msg-modal-content {
-          background-color: #fefefe;
-          margin: 5% auto;
-          padding: 20px;
-          border: 1px solid #888;
-          width: 90%;
-          height: 80%;
+          width: 100%;
+          height: auto;
+          margin: 0;
+          padding: 15px;
         }
 
         .OnePersonmsg .left .avatar {
@@ -2933,10 +2947,6 @@
   </head>
   <body>
     <div class="merge-msg-modal-content">
-      <div class="title">
-        <span class="close">×</span>
-        <div class="title">群聊的聊天记录</div>
-      </div>
       <div class="modal-container">
         <div class="OnePersonmsg">
           <div class="left">
@@ -3522,6 +3532,38 @@
             </div>
           </div>
         </div>
+        <div class="OnePersonmsg">
+          <div class="left">
+            <div class="avatar">
+              <img
+                src="https://wx.qlogo.cn/mmhead/ver_1/QMFBic4dTUO58sz36sHPA7QJ76RqkTkzAjrOQuV8k104CfnR4IsTHgiaicicegm6yTf2vdPPJSsibFNJGaMfbOw5wJicNHJxia7ca4e9Jiaj12NhYQakZSP5QVHsKfEb4yel7icOib/96"
+                loading="lazy"
+              />
+            </div>
+          </div>
+          <div class="right">
+            <div class="msg-block">
+              <div class="msg-container-top">
+                <span>輪迴</span>
+                <span style="font-size: 12px">2025-05-17 11:07:28</span>
+              </div>
+              <div class="inner-msgMerge-card">
+                <div class="title">輪迴与fu.chuanwu的聊天记录</div>
+                <div class="desc">fu.chuanwu: [图片]</div>
+                <div class="desc">fu.chuanwu: [图片]</div>
+              </div>
+            </div>
+            <div class="msg-block">
+              <div class="msg-container-top">
+                <span>輪迴</span>
+                <span style="font-size: 12px">2025-05-17 11:08:45</span>
+              </div>
+              <div class="msg-container">
+                儿子脾气暴躁，女儿不听话，住过来之前没有。发生过追别人尾
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -3685,7 +3727,9 @@
     <script>
       document.addEventListener("DOMContentLoaded", function () {
         // Find all elements with the class "inner-msgMerge-card"
-        var mergeCards = document.querySelectorAll(".inner-msgMerge-card, .merge-message");
+        var mergeCards = document.querySelectorAll(
+          ".inner-msgMerge-card, .merge-message"
+        );
 
         // Add click event listener to each element
         mergeCards.forEach(function (card) {
