@@ -81,7 +81,66 @@ class HtmlExporter(ExporterBase):
         select_msg_cnt = 0  # 要导出的消息数量
         msg_index = 0
 
+        def build_merged_html(merged_message):
+            # Read the merged message template
+            current_dir = os.path.dirname(os.path.abspath(__file__))
+            template_path = os.path.join(current_dir, 'resources', 'mergeMsg.html')
+            with open(template_path, "r", encoding="utf-8") as template_file:
+                template_content = template_file.read()
+
+            from jinja2 import Template
+            template = Template(template_content)
+
+            # Prepare messages for template
+            message_records = []
+            for message in merged_message.messages:
+                message_record = {
+                    "avatar_src": message.avatar_src,
+                    "display_name": message.display_name,
+                    "type": message.type,
+                    "str_time": message.str_time,
+                }
+
+                match message.type:
+                    case 1 | 2:
+                        message_record["content"] = message.content
+                    case 3:
+                        message_record["content"] = "file:///D:/work/ws/pyWs/WeChatMsg/output/data/%E8%81%8A%E5%A4%A9%E8%AE%B0%E5%BD%95/bak01(46297398354@chatroom)/image/2025-05/20250518_154745_0_0.jpg"
+                    case 43:
+                        message_record["content"] = "./video/2025-05/20250518_155240_0_0.mp4"
+                    case 81604378673:
+                        message_record["title"] = message.title
+                        message_record["description"] = message.description
+                    case _:
+                        message_record["content"] = "tmp"
+                message_records.append(message_record)
+
+            # Render the template with message data
+            rendered_html = template.render(messages=message_records)
+            return rendered_html
+
+            
+
+        def create_merged_file(merged_message):
+            # Format timestamp for directory and filename
+            timestamp = merged_message.str_time.replace('-', '').replace(' ', '-').replace(':', '')
+            dir_name = timestamp
+            merged_msg_dir = os.path.join(self.origin_path, dir_name)
+            os.makedirs(merged_msg_dir, exist_ok=True)
+
+            # Generate HTML file with the same name as the directory
+            html_filename = f"{dir_name}.html"
+            html_file_path = os.path.join(merged_msg_dir, html_filename)
+
+            # Create the HTML file for the merged messages
+            html_content = build_merged_html(merged_message)
+            # Write merged messages to the HTML file
+            with open(html_file_path, "w", encoding="utf-8") as f:
+                f.write(html_content)
+
         def parser_merged(merged_message):
+            create_merged_file(merged_message)
+
             for msg in merged_message.messages:
                 type_ = msg.type
                 if type_ == MessageType.Image:

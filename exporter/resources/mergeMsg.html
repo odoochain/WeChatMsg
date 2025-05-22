@@ -2954,15 +2954,39 @@
             <div class="avatar"><img src="{{ record.avatar_src }}" loading="lazy" /></div>
           </div>
           <div class="right">
-            {% for block in record.blocks %}
             <div class="msg-block">
               <div class="msg-container-top">
                 <span>{{ record.display_name }}</span>
-                <span style="font-size: 12px;">{{ block.timestamp }}</span>
+                <span style="font-size: 12px;">{{ record.str_time }}</span>
               </div>
-              {{ block.content|safe }}
+              
+              {% if record.type == 1 or record.type == 2 %}
+              <div class="msg-container">{{ record.content }}</div>
+              
+              {% elif record.type == 3 %}
+              <div class="chat-image">
+                <img
+                  src={{ record.content }}
+                  onclick="showModal(this)"
+                  loading="lazy"
+                />
+              </div>
+              
+              {% elif record.type == 43 %}
+              <div class="chat-video">
+                <video
+                  src={{ record.content }}
+                  controls=""
+                ></video>
+              </div>
+
+              {% elif record.type == 81604378673 %}
+              <div class="inner-msgMerge-card">
+                <div class="title">{{ record.title }}</div>
+                <div class="desc">{{ record.description }}</div>
+              </div>
+              {% endif %}
             </div>
-            {% endfor %}
           </div>
         </div>
         {% endfor %}
