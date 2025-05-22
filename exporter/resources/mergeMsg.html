@@ -2981,10 +2981,12 @@
               </div>
 
               {% elif record.type == 81604378673 %}
-              <div class="inner-msgMerge-card">
-                <div class="title">{{ record.title }}</div>
-                <div class="desc">{{ record.description }}</div>
-              </div>
+              <a href="{{ record.link_url }}" target="_blank" style="text-decoration: none; color: inherit;">
+                <div class="inner-msgMerge-card">
+                  <div class="title">{{ record.title }}</div>
+                  <div class="desc">{{ record.description }}</div>
+                </div>
+              </a>
               {% endif %}
             </div>
           </div>
@@ -3150,7 +3152,7 @@
         });
       });
     </script>
-    <script>
+    <!-- <script>
       document.addEventListener("DOMContentLoaded", function () {
         // Find all elements with the class "inner-msgMerge-card"
         var mergeCards = document.querySelectorAll(
@@ -3166,6 +3168,6 @@
           });
         });
       });
-    </script>
+    </script> -->
   </body>
 </html>

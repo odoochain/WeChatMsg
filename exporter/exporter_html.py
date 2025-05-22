@@ -111,6 +111,8 @@ class HtmlExporter(ExporterBase):
                     case 81604378673:
                         message_record["title"] = message.title
                         message_record["description"] = message.description
+                        dir_name, merged_msg_dir = build_merged_msg_dirname(message)
+                        message_record["link_url"] = os.path.join("..", dir_name, dir_name + '.html')
                     case _:
                         message_record["content"] = "tmp"
                 message_records.append(message_record)
