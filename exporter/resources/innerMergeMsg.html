@@ -3087,13 +3087,10 @@
         modalImg.addEventListener("mousedown", function (e) {
           e.preventDefault(); // 阻止默认行为
 
-          // 仅当图片放大时允许拖动
-          if (scale > 1) {
-            isDragging = true;
-            startX = e.clientX;
-            startY = e.clientY;
-            this.style.cursor = "grabbing";
-          }
+          isDragging = true;
+          startX = e.clientX;
+          startY = e.clientY;
+          this.style.cursor = "grabbing";
         });
 
         // 拖动功能 - 鼠标移动
