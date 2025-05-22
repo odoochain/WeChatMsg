@@ -105,9 +105,9 @@ class HtmlExporter(ExporterBase):
                     case 1 | 2:
                         message_record["content"] = message.content
                     case 3:
-                        message_record["content"] = "file:///D:/work/ws/pyWs/WeChatMsg/output/data/%E8%81%8A%E5%A4%A9%E8%AE%B0%E5%BD%95/bak01(46297398354@chatroom)/image/2025-05/20250518_154745_0_0.jpg"
+                        message_record["content"] = message.file_name
                     case 43:
-                        message_record["content"] = "./video/2025-05/20250518_155240_0_0.mp4"
+                        message_record["content"] = message.file_name
                     case 81604378673:
                         message_record["title"] = message.title
                         message_record["description"] = message.description
@@ -120,12 +120,14 @@ class HtmlExporter(ExporterBase):
             return rendered_html
 
             
+        def build_merged_msg_dirname(merged_message):
+            # Format timestamp for directory and filename
+            formatted_time = merged_message.str_time.replace('-', '').replace(' ', '-').replace(':', '')
+            return formatted_time, os.path.join(self.origin_path, formatted_time)
+
 
         def create_merged_file(merged_message):
-            # Format timestamp for directory and filename
-            timestamp = merged_message.str_time.replace('-', '').replace(' ', '-').replace(':', '')
-            dir_name = timestamp
-            merged_msg_dir = os.path.join(self.origin_path, dir_name)
+            dir_name, merged_msg_dir = build_merged_msg_dirname(merged_message)
             os.makedirs(merged_msg_dir, exist_ok=True)
 
             # Generate HTML file with the same name as the directory
@@ -139,7 +141,7 @@ class HtmlExporter(ExporterBase):
                 f.write(html_content)
 
         def parser_merged(merged_message):
-            create_merged_file(merged_message)
+            dir_name, merged_msg_dir = build_merged_msg_dirname(merged_message)
 
             for msg in merged_message.messages:
                 type_ = msg.type
@@ -154,8 +156,22 @@ class HtmlExporter(ExporterBase):
                     )
                     image_tasks.append(
                         (
+                            os.path.join(Me().wx_dir, msg.path),
+                            merged_msg_dir,
+                            msg.file_name
+                        )
+                    )
+                    image_tasks.append(
+                        (
                             os.path.join(Me().wx_dir, msg.thumb_path),
                             os.path.join(image_dir, msg.str_time[:7]),
+                            msg.file_name + '_t'
+                        )
+                    )
+                    image_tasks.append(
+                        (
+                            os.path.join(Me().wx_dir, msg.thumb_path),
+                            merged_msg_dir,
                             msg.file_name + '_t'
                         )
                     )
@@ -170,6 +186,13 @@ class HtmlExporter(ExporterBase):
                             ''
                         )
                     )
+                    file_tasks.append(
+                        (
+                            origin_file_path,
+                            merged_msg_dir,
+                            ''
+                        )
+                    )
                     msg.path = f'./file/{msg.str_time[:7]}/{os.path.basename(origin_file_path)}'
                 elif type_ == MessageType.Video:
                     msg.set_file_name()
@@ -180,10 +203,20 @@ class HtmlExporter(ExporterBase):
                             msg.file_name
                         )
                     )
+                    video_tasks.append(
+                        (
+                            os.path.join(Me().wx_dir, msg.path),
+                            merged_msg_dir,
+                            msg.file_name
+                        )
+                    )
                     ext = os.path.basename(msg.path).split('.')[-1]
                     msg.path = f'./video/{msg.str_time[:7]}/{msg.file_name}.{ext}'
                 elif type_ == MessageType.MergedMessages:
                     parser_merged(msg)
+
+            create_merged_file(merged_message)
+
 
         for index, message in enumerate(messages):
             if not self._is_running:
