@@ -220,7 +220,7 @@ class FileMessage(Message):
             str_time += '_1'
         else:
             str_time += '_0'
-        self.file_name = str_time
+        self.file_name = str_time + '.' + self.file_type
         return True
 
     def to_text(self):
