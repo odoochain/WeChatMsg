@@ -227,6 +227,23 @@ class HtmlExporter(ExporterBase):
                     )
                     ext = os.path.basename(msg.path).split('.')[-1]
                     msg.path = f'./video/{msg.str_time[:7]}/{msg.file_name}'
+                elif type_ == MessageType.Audio:
+                    msg.set_file_name()
+                    audio_tasks.append(
+                        (
+                            self.database.get_media_buffer(msg.server_id, self.contact.is_public()),
+                            os.path.join(audio_dir, msg.str_time[:7]),
+                            msg.file_name
+                        )
+                    )
+                    audio_tasks.append(
+                        (
+                            self.database.get_media_buffer(msg.server_id, self.contact.is_public()),
+                            self.origin_path,
+                            msg.file_name
+                        )
+                    )
+                    msg.path = f'./voice/{msg.str_time[:7]}/{msg.file_name + ".mp3"}'
                 elif type_ == MessageType.MergedMessages:
                     parser_merged(msg)
 
@@ -281,6 +298,13 @@ class HtmlExporter(ExporterBase):
                         ''
                     )
                 )
+                file_tasks.append(
+                    (
+                        origin_file_path,
+                        self.origin_path,
+                        ''
+                    )
+                )
                 if os.path.isfile(origin_file_path):
                     message.path = f'./file/{message.str_time[:7]}/{os.path.basename(origin_file_path)}'
             elif type_ == MessageType.Video:
@@ -308,6 +332,13 @@ class HtmlExporter(ExporterBase):
                     (
                         self.database.get_media_buffer(message.server_id, self.contact.is_public()),
                         os.path.join(audio_dir, message.str_time[:7]),
+                        message.file_name
+                    )
+                )
+                audio_tasks.append(
+                    (
+                        self.database.get_media_buffer(message.server_id, self.contact.is_public()),
+                        self.origin_path,
                         message.file_name
                     )
                 )
