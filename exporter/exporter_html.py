@@ -163,22 +163,18 @@ class HtmlExporter(ExporterBase):
                             msg.file_name
                         )
                     )
+                    ext = os.path.basename(msg.file_name).split('.')[-1]
+                    prefix = os.path.basename(msg.file_name).split('.')[0] 
                     image_tasks.append(
                         (
                             os.path.join(Me().wx_dir, msg.thumb_path),
                             os.path.join(image_dir, msg.str_time[:7]),
-                            msg.file_name + '_t'
+                            prefix + '_t.' + ext
                         )
                     )
-                    image_tasks.append(
-                        (
-                            os.path.join(Me().wx_dir, msg.thumb_path),
-                            merged_msg_dir,
-                            msg.file_name + '_t'
-                        )
-                    )
+
                     msg.path = f"./image/{msg.str_time[:7]}/{msg.file_name}"
-                    msg.thumb_path = f"./image/{msg.str_time[:7]}/{msg.file_name + '_t'}"
+                    msg.thumb_path = f"./image/{msg.str_time[:7]}/{prefix + '_t.' + ext}"
                 elif type_ == MessageType.File:
                     origin_file_path = os.path.join(Me().wx_dir, msg.path)
                     file_tasks.append(
@@ -239,15 +235,17 @@ class HtmlExporter(ExporterBase):
                         message.file_name
                     )
                 )
+                ext = os.path.basename(message.file_name).split('.')[-1]
+                prefix = os.path.basename(message.file_name).split('.')[0]
                 image_tasks.append(
                     (
                         os.path.join(Me().wx_dir, message.thumb_path),
                         os.path.join(image_dir, message.str_time[:7]),
-                        message.file_name + '_t'
+                        prefix + '_t.' + ext
                     )
-                )
+                   )
                 message.path = f"./image/{message.str_time[:7]}/{message.file_name}"
-                message.thumb_path = f"./image/{message.str_time[:7]}/{message.file_name + '_t'}"
+                message.thumb_path = f"./image/{message.str_time[:7]}/{prefix + '_t.' + ext}"
             elif type_ == MessageType.File:
                 FileIndex.append(msg_index)
                 origin_file_path = os.path.join(Me().wx_dir, message.path)
