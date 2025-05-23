@@ -8,6 +8,8 @@ import subprocess
 import sys
 import time
 import traceback
+import datetime
+
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from typing import List, Tuple
 
@@ -64,6 +66,7 @@ class ExporterBaseBase:
         self.id = ExporterBaseBase.exporter_id
         self._is_running = True
         self._is_paused = False
+        self.start_time_stamp: str = datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
 
     def cancel(self):
         print('cancel')
@@ -128,7 +131,7 @@ class ExporterBase(ExporterBaseBase):
         self.group_contacts = {}  # 群聊里的所有联系人
         self.group_members = group_members  # 要导出的群聊成员（用于群消息筛选）
         self.group_members_set = group_members
-        self.origin_path = os.path.join(output_dir, '聊天记录', f'{self.contact.remark}({self.contact.wxid})')
+        self.origin_path = os.path.join(output_dir, '聊天记录', f'{self.contact.remark}({self.contact.wxid})-{self.start_time_stamp}')
         makedirs(self.origin_path)
 
     def print_progress(self, progress):
@@ -424,7 +427,7 @@ class GroupContactExporter(ExporterBaseBase):
         if self.contact:
             if not isinstance(self.contact, list):
                 self.origin_path = os.path.join(output_dir, '聊天记录',
-                                                f'{self.contact.remark}({self.contact.wxid})')
+                                                f'{self.contact.remark}({self.contact.wxid})-{self.start_time_stamp})')
                 os.makedirs(self.origin_path, exist_ok=True)
 
     def start(self):
