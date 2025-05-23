@@ -214,7 +214,7 @@ class HtmlExporter(ExporterBase):
                         )
                     )
                     ext = os.path.basename(msg.path).split('.')[-1]
-                    msg.path = f'./video/{msg.str_time[:7]}/{msg.file_name}.{ext}'
+                    msg.path = f'./video/{msg.str_time[:7]}/{msg.file_name}'
                 elif type_ == MessageType.MergedMessages:
                     parser_merged(msg)
 
