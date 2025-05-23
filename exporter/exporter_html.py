@@ -240,6 +240,13 @@ class HtmlExporter(ExporterBase):
                         message.file_name
                     )
                 )
+                image_tasks.append(
+                    (
+                        os.path.join(Me().wx_dir, message.path),
+                        self.origin_path,
+                        message.file_name
+                    )
+                )
                 ext = os.path.basename(message.file_name).split('.')[-1]
                 prefix = os.path.basename(message.file_name).split('.')[0]
                 image_tasks.append(
@@ -270,6 +277,13 @@ class HtmlExporter(ExporterBase):
                     (
                         os.path.join(Me().wx_dir, message.path),
                         os.path.join(video_dir, message.str_time[:7]),
+                        message.file_name
+                    )
+                )
+                video_tasks.append(
+                    (
+                        os.path.join(Me().wx_dir, message.path),
+                        self.origin_path,
                         message.file_name
                     )
                 )
