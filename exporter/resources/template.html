@@ -2958,7 +2958,7 @@
               z-index: 1001;
             }
           </style>
-    <title>出错了</title>
+    <title>{{ file_data.title_text }}</title>
 </head>
 
 <body>
@@ -2977,7 +2977,7 @@
         </div>
         <div class="main-body">
             <div class="title-bar" id="title-bar">
-                <p id="title">出错了</p>
+                <p id="title">{{ file_data.title_text }}</p>
                 <div class="topnavbar-nav" id="topnavbar-nav">
                 </div>
                 <span class="menu-toggle" id="menu-toggle">
@@ -3545,24 +3545,24 @@
         const loader = document.getElementById("loader");
         const content = document.getElementById("content");
         const gender = ['未知', '男', '女'];
-        const wxid={{wxid}};
+        const wxid= "{{ file_data.wxid }}";
         const isChatroom = wxid.endsWith("@chatroom");
-        const avatarPaths = {{avatarPaths}};
-        const avatarUrls = {{avatarUrls}};
-        const chatMessages = /*注意看这是分割线*/;
-        var timelineData = {{timelineData}};
-        var PageTimeline = {{PageTimeline}};
-        var server_id_Page = {{server_id_Page}};
-        var server_id_Idx = {{server_id_Idx}};
-        const dateDataMap = {{dateDataMap}};
-        const AllIndex = {{AllIndex}};
-        const ImageIndex = {{ImageIndex}};
-        const FileIndex = {{FileIndex}};
-        const LinkIndex = {{LinkIndex}};
-        const MusicIndex = {{MusicIndex}};
-        const TransferIndex = {{TransferIndex}};
-        const MiniProgramIndex = {{MiniProgramIndex}};
-        const VideoNumberIndex = {{VideoNumberIndex}};
+        const avatarPaths = {{ file_data.avatarPaths }};
+        const avatarUrls = {{ file_data.avatarUrls }};
+        const chatMessages = {{ file_data.chatMessages }};
+        var timelineData = {{ file_data.timelineData }};
+        var PageTimeline = {{ file_data.PageTimeline }};
+        var server_id_Page = {{ file_data.server_id_Page }};
+        var server_id_Idx = {{ file_data.server_id_Idx }};
+        const dateDataMap = {{ file_data.dateDataMap }};
+        const AllIndex = {{ file_data.AllIndex }};
+        const ImageIndex = {{ file_data.ImageIndex }};
+        const FileIndex = {{ file_data.FileIndex }};
+        const LinkIndex = {{ file_data.LinkIndex }};
+        const MusicIndex = {{ file_data.MusicIndex }};
+        const TransferIndex = {{ file_data.TransferIndex }};
+        const MiniProgramIndex = {{ file_data.MiniProgramIndex }};
+        const VideoNumberIndex = {{ file_data.VideoNumberIndex }};
     </script>
     <script type="text/javascript">
         window._AMapSecurityConfig = {

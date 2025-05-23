@@ -9,6 +9,7 @@ from wxManager.decrypt.decrypt_dat import batch_decode_image_multiprocessing
 from wxManager.log import logger
 from wxManager.model import MessageType, Me
 from exporter.exporter import ExporterBase, copy_files, decode_audios, get_new_filename
+from jinja2 import Template
 
 icon_files = {
     'DOCX': ['doc', 'docx'],
@@ -44,17 +45,21 @@ class HtmlExporter(ExporterBase):
         shutil.copytree(os.path.join(current_dir, 'resources', 'emoji'), os.path.join(self.origin_path, 'emoji'),dirs_exist_ok=True)
         with open(file_path, "r", encoding="utf-8") as f:
             content = f.read()
-            html_head, html_end = content.split('/*注意看这是分割线*/')
+        
+        template = Template(content)
+        htmlfile_data = {
+            'title_text': f"{self.contact.remark}_{str(start)}"
+        }
+
         f = open(filename, 'w', encoding='utf-8')
-        html_head = html_head.replace("<title>出错了</title>", f"<title>{self.contact.remark}_{str(start)}</title>")
-        html_head = html_head.replace("<p id=\"title\">出错了</p>", f"<p id=\"title\">{self.contact.remark}_{str(start)}</p>")
+
         # avatar_urls, avatar_paths = self.get_avatar_urls()
         avatar_urls = []
         avatar_paths = []
-        html_head = html_head.replace("{{avatarPaths}}", json.dumps(avatar_paths))
-        html_head = html_head.replace("{{avatarUrls}}", json.dumps(avatar_urls)).replace('{{wxid}}',
-                                                                                         f'"{self.contact.wxid}"')
-        f.write(html_head)
+        
+        htmlfile_data['avatarPaths'] = json.dumps(avatar_paths)
+        htmlfile_data['avatarUrls'] = json.dumps(avatar_urls)
+        htmlfile_data['wxid'] = self.contact.wxid
 
         # QMe().save_avatar(self.origin_path + '/avatar/' + Me().wxid + '.png')
         # self.contact.save_avatar(self.origin_path + '/avatar/' + self.contact.wxid + '.png')
@@ -96,7 +101,6 @@ class HtmlExporter(ExporterBase):
             with open(template_path, "r", encoding="utf-8") as template_file:
                 template_content = template_file.read()
 
-            from jinja2 import Template
             template = Template(template_content)
 
             # Prepare messages for template
@@ -369,20 +373,23 @@ class HtmlExporter(ExporterBase):
         AllIndex = list(range(len(html_json)))
 
         replace_map = {
-            "{{timelineData}}": timelineData,
-            "{{PageTimeline}}": PageTimeline,
-            "{{server_id_Page}}": server_id_Page,
-            "{{server_id_Idx}}": server_id_Idx,
-            "{{dateDataMap}}": dateDataMap,
-            "{{AllIndex}}": AllIndex,
-            "{{ImageIndex}}": ImageIndex,
-            "{{FileIndex}}": FileIndex,
-            "{{LinkIndex}}": LinkIndex,
-            "{{MusicIndex}}": MusicIndex,
-            "{{TransferIndex}}": TransferIndex,
-            "{{MiniProgramIndex}}": MiniProgramIndex,
-            "{{VideoNumberIndex}}": VideoNumberIndex
+            "timelineData": timelineData,
+            "PageTimeline": PageTimeline,
+            "server_id_Page": server_id_Page,
+            "server_id_Idx": server_id_Idx,
+            "dateDataMap": dateDataMap,
+            "AllIndex": AllIndex,
+            "ImageIndex": ImageIndex,
+            "FileIndex": FileIndex,
+            "LinkIndex": LinkIndex,
+            "MusicIndex": MusicIndex,
+            "TransferIndex": TransferIndex,
+            "MiniProgramIndex": MiniProgramIndex,
+            "VideoNumberIndex": VideoNumberIndex
         }
+        htmlfile_data.update(replace_map)
+
+
 
         def dict_to_js(dic: dict):
             for key, value in dic.items():
@@ -402,11 +409,11 @@ class HtmlExporter(ExporterBase):
         for item in copy.deepcopy(html_json):
             html_data.append(dict_to_js(item))
 
-        f.write(json.dumps(html_data, ensure_ascii=False, indent=4))
-        for key, value in replace_map.items():
-            html_end = html_end.replace(key, json.dumps(value))
+        htmlfile_data['chatMessages'] = json.dumps(html_data, ensure_ascii=False, indent=4)
 
-        f.write(html_end)
+        html_content = template.render(file_data=htmlfile_data)
+
+        f.write(html_content)
         f.close()
 
         with open(filename + '.json', 'w', encoding='utf-8') as f:
