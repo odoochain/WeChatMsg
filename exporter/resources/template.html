@@ -3832,52 +3832,52 @@
             }
 
 
-            // function messageImgBox(message) {
-            //     const messageImgTag = document.createElement('div');
-            //     if(message.type == 47) {
-            //         messageImgTag.className = `emoji-image`;
-            //     }else{
-            //         messageImgTag.className = `chat-image`;
-            //     }
-            //     messageImgTag.innerHTML = `<img src="${message.path}" onclick="showModal(this)" loading="lazy"/>`;
-            //     return messageImgTag;
-            // }
             function messageImgBox(message) {
                 const messageImgTag = document.createElement('div');
-                
-                if (message.type == 47) {
-                    messageImgTag.className = 'emoji-image';
-                    messageImgTag.innerHTML = `<img src="${message.path}" onclick="showModal(this)" loading="lazy"/>`;
-                    return messageImgTag;
-                } else {
-                    messageImgTag.className = 'chat-image';
+                if(message.type == 47) {
+                    messageImgTag.className = `emoji-image`;
+                }else{
+                    messageImgTag.className = `chat-image`;
                 }
-
-                const basePath = message.path; // 图片的原始路径(没有后缀名)
-                console.log('basePath:', basePath);
-                const extensions = ['.jpg','.png', '.jpeg', '.gif', '.bmp']; // 常见的图片后缀
-                let imgLoaded = false;
-
-                // 尝试不同的后缀名
-                extensions.forEach(extension => {
-                    const img = new Image();
-                    img.src = basePath + extension;
-
-                    img.onload = function() {
-                        messageImgTag.innerHTML = `<img src="${img.src}" onclick="showModal(this)" loading="lazy"/>`;
-                        imgLoaded = true;
-                    };
-
-                    img.onerror = function() {
-                        // 图片加载失败，继续尝试下一个后缀
-                        if (!imgLoaded) {
-                            // 这里可以选择在所有后缀都尝试完后进行处理
-                        }
-                    };
-                });
-
+                messageImgTag.innerHTML = `<img src="${message.path}" onclick="showModal(this)" loading="lazy"/>`;
                 return messageImgTag;
             }
+            // function messageImgBox(message) {
+            //     const messageImgTag = document.createElement('div');
+                
+            //     if (message.type == 47) {
+            //         messageImgTag.className = 'emoji-image';
+            //         messageImgTag.innerHTML = `<img src="${message.path}" onclick="showModal(this)" loading="lazy"/>`;
+            //         return messageImgTag;
+            //     } else {
+            //         messageImgTag.className = 'chat-image';
+            //     }
+
+            //     const basePath = message.path; // 图片的原始路径(没有后缀名)
+            //     console.log('basePath:', basePath);
+            //     const extensions = ['.jpg','.png', '.jpeg', '.gif', '.bmp']; // 常见的图片后缀
+            //     let imgLoaded = false;
+
+            //     // 尝试不同的后缀名
+            //     extensions.forEach(extension => {
+            //         const img = new Image();
+            //         img.src = basePath + extension;
+
+            //         img.onload = function() {
+            //             messageImgTag.innerHTML = `<img src="${img.src}" onclick="showModal(this)" loading="lazy"/>`;
+            //             imgLoaded = true;
+            //         };
+
+            //         img.onerror = function() {
+            //             // 图片加载失败，继续尝试下一个后缀
+            //             if (!imgLoaded) {
+            //                 // 这里可以选择在所有后缀都尝试完后进行处理
+            //             }
+            //         };
+            //     });
+
+            //     return messageImgTag;
+            // }
 
 
             function messageVideoBox(message) {

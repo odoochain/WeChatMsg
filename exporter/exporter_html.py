@@ -271,7 +271,7 @@ class HtmlExporter(ExporterBase):
                     )
                 )
                 ext = os.path.basename(message.path).split('.')[-1]
-                message.path = f'./video/{message.str_time[:7]}/{message.file_name}.{ext}'
+                message.path = f'./video/{message.str_time[:7]}/{message.file_name}'
             elif type_ == MessageType.Audio:
                 message.set_file_name()
                 audio_tasks.append(

@@ -93,6 +93,7 @@ def decode_dat(xor_key: int, file_path, out_path, dst_name='') -> str | bytes:
             return ''
 
         filename = os.path.basename(file_path)[:-4] if not dst_name else dst_name
+
         if file_type == 1:
             pic_name = filename + ".jpg"
         elif file_type == 3:
@@ -102,7 +103,7 @@ def decode_dat(xor_key: int, file_path, out_path, dst_name='') -> str | bytes:
         else:
             pic_name = filename + ".jpg"
 
-        file_outpath = os.path.join(out_path, pic_name)
+        file_outpath = os.path.join(out_path, filename)
         if os.path.exists(file_outpath):
             return file_outpath
 
@@ -227,7 +228,7 @@ def decode_dat_v4(xor_key: int, file_path, out_path, dst_name='') -> str | bytes
     # 获取图片后缀名
     image_type = get_image_type(decrypted_data[:10])
     output_file_name = os.path.basename(file_path)[:-4] if not dst_name else dst_name
-    output_file = os.path.join(out_path, output_file_name + '.' + image_type)
+    output_file = os.path.join(out_path, output_file_name)
     if os.path.exists(output_file):
         return output_file
 
@@ -279,7 +280,7 @@ async def decode_dat_v4_async(xor_key: int, file_path, out_path, dst_name='') ->
     # 获取图片后缀名
     image_type = get_image_type(decrypted_data[:10])
     output_file_name = os.path.basename(file_path)[:-4] if not dst_name else dst_name
-    output_file = os.path.join(out_path, output_file_name + '.' + image_type)
+    output_file = os.path.join(out_path, output_file_name)
 
     if os.path.exists(output_file):
         return output_file

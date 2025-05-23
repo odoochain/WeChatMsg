@@ -513,7 +513,7 @@ def copy_files(file_tasks: List[Tuple[str, str, str]]):
         for source_file, output_dir, dst_name in file_tasks:
             if dst_name:
                 ext = os.path.basename(source_file).split('.')[-1]
-                destination_file = os.path.join(output_dir, f'{dst_name}.{ext}')
+                destination_file = os.path.join(output_dir, f'{dst_name}')
             else:
                 destination_file = os.path.join(output_dir, os.path.basename(source_file))
             if os.path.exists(destination_file):
