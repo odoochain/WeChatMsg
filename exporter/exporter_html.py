@@ -24,9 +24,18 @@ icon_files = {
 class HtmlExporter(ExporterBase):
 
     def export(self):
-        print(f"【开始导出 HTML {self.contact.remark}】")
+        messages = self.database.get_messages(self.contact.wxid, time_range=self.time_range)
+        total_steps = len(messages)
+        step = 10
+        start = 0
+        while start < total_steps:
+            self.export_piece(messages, start, step)
+            start += step
+
+    def export_piece(self, messages, start, step):
+        print(f"【开始导出 HTML {self.contact.remark}_{str(start)}】")
         f_name = '.html'
-        filename = os.path.join(self.origin_path, f'{self.contact.remark}{f_name}')
+        filename = os.path.join(self.origin_path, f'{self.contact.remark}_{str(start)}{f_name}')
         filename = get_new_filename(filename)
         # 获取当前脚本的目录
         current_dir = os.path.dirname(os.path.abspath(__file__))
@@ -46,7 +55,6 @@ class HtmlExporter(ExporterBase):
         html_head = html_head.replace("{{avatarUrls}}", json.dumps(avatar_urls)).replace('{{wxid}}',
                                                                                          f'"{self.contact.wxid}"')
         f.write(html_head)
-        messages = self.database.get_messages(self.contact.wxid, time_range=self.time_range)
 
         # QMe().save_avatar(self.origin_path + '/avatar/' + Me().wxid + '.png')
         # self.contact.save_avatar(self.origin_path + '/avatar/' + self.contact.wxid + '.png')
@@ -221,7 +229,8 @@ class HtmlExporter(ExporterBase):
             create_merged_file(merged_message)
 
 
-        for index, message in enumerate(messages):
+        for index in range(start, min(start + step, len(messages))):
+            message = messages[index]
             if not self._is_running:
                 break
             if index and index % 1000 == 0:
