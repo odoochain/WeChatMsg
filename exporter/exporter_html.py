@@ -26,7 +26,7 @@ class HtmlExporter(ExporterBase):
     def export(self):
         messages = self.database.get_messages(self.contact.wxid, time_range=self.time_range)
         total_steps = len(messages)
-        step = 10
+        step = 1000
         start = 0
         while start < total_steps:
             self.export_piece(messages, start, step)
@@ -46,8 +46,8 @@ class HtmlExporter(ExporterBase):
             content = f.read()
             html_head, html_end = content.split('/*注意看这是分割线*/')
         f = open(filename, 'w', encoding='utf-8')
-        html_head = html_head.replace("<title>出错了</title>", f"<title>{self.contact.remark}</title>")
-        html_head = html_head.replace("<p id=\"title\">出错了</p>", f"<p id=\"title\">{self.contact.remark}</p>")
+        html_head = html_head.replace("<title>出错了</title>", f"<title>{self.contact.remark}_{str(start)}</title>")
+        html_head = html_head.replace("<p id=\"title\">出错了</p>", f"<p id=\"title\">{self.contact.remark}_{str(start)}</p>")
         # avatar_urls, avatar_paths = self.get_avatar_urls()
         avatar_urls = []
         avatar_paths = []
@@ -178,13 +178,13 @@ class HtmlExporter(ExporterBase):
                     )
                     ext = os.path.basename(msg.file_name).split('.')[-1]
                     prefix = os.path.basename(msg.file_name).split('.')[0] 
-                    image_tasks.append(
-                        (
-                            os.path.join(Me().wx_dir, msg.thumb_path),
-                            os.path.join(image_dir, msg.str_time[:7]),
-                            prefix + '_t.' + ext
-                        )
-                    )
+                    # image_tasks.append(
+                    #     (
+                    #         os.path.join(Me().wx_dir, msg.thumb_path),
+                    #         os.path.join(image_dir, msg.str_time[:7]),
+                    #         prefix + '_t.' + ext
+                    #     )
+                    # )
 
                     msg.path = f"./image/{msg.str_time[:7]}/{msg.file_name}"
                     msg.thumb_path = f"./image/{msg.str_time[:7]}/{prefix + '_t.' + ext}"
@@ -258,13 +258,13 @@ class HtmlExporter(ExporterBase):
                 )
                 ext = os.path.basename(message.file_name).split('.')[-1]
                 prefix = os.path.basename(message.file_name).split('.')[0]
-                image_tasks.append(
-                    (
-                        os.path.join(Me().wx_dir, message.thumb_path),
-                        os.path.join(image_dir, message.str_time[:7]),
-                        prefix + '_t.' + ext
-                    )
-                   )
+                # image_tasks.append(
+                #     (
+                #         os.path.join(Me().wx_dir, message.thumb_path),
+                #         os.path.join(image_dir, message.str_time[:7]),
+                #         prefix + '_t.' + ext
+                #     )
+                # )
                 message.path = f"./image/{message.str_time[:7]}/{message.file_name}"
                 message.thumb_path = f"./image/{message.str_time[:7]}/{prefix + '_t.' + ext}"
             elif type_ == MessageType.File:
