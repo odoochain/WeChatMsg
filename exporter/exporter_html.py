@@ -93,12 +93,14 @@ class HtmlExporter(ExporterBase):
 
             # Prepare messages for template
             message_records = []
+            dir_name, merged_msg_dir = build_merged_msg_dirname(merged_message)
             for message in merged_message.messages:
                 message_record = {
                     "avatar_src": message.avatar_src,
                     "display_name": message.display_name,
                     "type": message.type,
                     "str_time": message.str_time,
+                    "files_dir": dir_name + '.files'
                 }
 
                 match message.type:
@@ -111,8 +113,7 @@ class HtmlExporter(ExporterBase):
                     case 81604378673:
                         message_record["title"] = message.title
                         message_record["description"] = message.description
-                        dir_name, merged_msg_dir = build_merged_msg_dirname(message)
-                        message_record["link_url"] = os.path.join("..", dir_name, dir_name + '.html')
+                        message_record["link_url"] = dir_name + '.html'
                     case _:
                         message_record["content"] = "tmp"
                 message_records.append(message_record)
@@ -125,7 +126,11 @@ class HtmlExporter(ExporterBase):
         def build_merged_msg_dirname(merged_message):
             # Format timestamp for directory and filename
             formatted_time = merged_message.str_time.replace('-', '').replace(' ', '-').replace(':', '')
-            return formatted_time, os.path.join(self.origin_path, formatted_time)
+            # Only use the last 6 digits of server_id
+            # Convert server_id to string and get last 6 digits, or use empty string if None
+            shortened_server_id = str(merged_message.server_id)[-6:] if merged_message.server_id else ''
+            dir_name = formatted_time + '-' + shortened_server_id
+            return dir_name, os.path.join(self.origin_path, dir_name + '.files')
 
 
         def create_merged_file(merged_message):
@@ -134,7 +139,7 @@ class HtmlExporter(ExporterBase):
 
             # Generate HTML file with the same name as the directory
             html_filename = f"{dir_name}.html"
-            html_file_path = os.path.join(merged_msg_dir, html_filename)
+            html_file_path = os.path.join(self.origin_path, html_filename)
 
             # Create the HTML file for the merged messages
             html_content = build_merged_html(merged_message)
