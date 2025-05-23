@@ -3142,14 +3142,7 @@
           }
         });
 
-        // 为所有聊天图片添加点击事件
-        const images = document.querySelectorAll(
-          ".chat-image img:not([onclick])"
-        );
-        images.forEach((image) => {
-          image.setAttribute("onclick", "showModal(this)");
-          image.style.cursor = "pointer";
-        });
+
       });
     </script>
     <!-- <script>

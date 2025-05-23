@@ -2916,6 +2916,48 @@
             transform: translate(-50%, -50%)
         }
     </style>
+        <!-- 修改modal-content样式 -->
+        <style>
+            /* Modal styles */
+            .modal {
+              display: none;
+              position: fixed;
+              z-index: 1000;
+              top: 0;
+              left: 0;
+              width: 100%;
+              height: 100%;
+              background-color: rgba(0, 0, 0, 0.9);
+              overflow: hidden;
+            }
+      
+            .modal-content {
+              position: absolute; /* 改回absolute */
+              top: 50%;
+              left: 50%;
+              transform: translate(-50%, -50%);
+              overflow: visible;
+            }
+      
+            #modalImage {
+              display: block;
+              transition: transform 0.1s ease;
+              cursor: move;
+              max-width: 90vw;
+              max-height: 90vh;
+            }
+      
+            .modal-close {
+              position: absolute;
+              top: 15px;
+              right: 25px;
+              color: #f1f1f1;
+              font-size: 40px;
+              font-weight: bold;
+              cursor: pointer;
+              z-index: 1001;
+            }
+          </style>
     <title>出错了</title>
 </head>
 
@@ -3006,8 +3048,11 @@
         </div>
 
     </div>
-    <div id="modal" class="modal" onclick="hideModal()">
-        <img id="modal-image" class="modal-image">
+    <div id="imageModal" class="modal">
+        <span class="modal-close" onclick="closeModal()">&times;</span>
+        <div class="modal-content">
+          <img id="modalImage" src="" />
+        </div>
     </div>
     <script>
         const FileIcons = {
@@ -5429,6 +5474,105 @@
             });
         }
         getSearchResults();
+    </script>
+        <script>
+      // Variables to track image state
+      // 图片状态变量
+      let scale = 1;
+      let isDragging = false;
+      let startX, startY;
+      let translateX = 0,
+        translateY = 0;
+      let lastTranslateX = 0,
+        lastTranslateY = 0;
+
+      // 显示模态框
+      function showModal(image) {
+        const modal = document.getElementById("imageModal");
+        const modalImg = document.getElementById("modalImage");
+
+        modal.style.display = "block";
+        modalImg.src = image.src;
+
+        // 重置缩放和位置
+        scale = 1;
+        translateX = 0;
+        translateY = 0;
+        lastTranslateX = 0;
+        lastTranslateY = 0;
+
+        // 应用变换 - 确保初始状态没有位移
+        modalImg.style.transform = `translate(0px, 0px) scale(${scale})`;
+        updateImageTransform();
+      }
+
+      // 关闭模态框
+      function closeModal() {
+        document.getElementById("imageModal").style.display = "none";
+      }
+
+      // 更新图片变换
+      function updateImageTransform() {
+        const img = document.getElementById("modalImage");
+        img.style.transform = `translate(${translateX}px, ${translateY}px) scale(${scale})`;
+      }
+
+      // DOM加载完成后的事件设置
+      document.addEventListener("DOMContentLoaded", function () {
+        const modal = document.getElementById("imageModal");
+        const modalImg = document.getElementById("modalImage");
+
+        // 鼠标滚轮缩放
+        modal.addEventListener("wheel", function (e) {
+          e.preventDefault();
+
+          // 计算新缩放比例
+          const delta = e.deltaY > 0 ? -0.1 : 0.1;
+          const newScale = Math.max(0.5, Math.min(scale + delta, 5)); // 限制缩放比例在0.5到5之间
+
+          scale = newScale;
+          updateImageTransform();
+        });
+
+        // 拖动功能 - 鼠标按下
+        modalImg.addEventListener("mousedown", function (e) {
+          e.preventDefault(); // 阻止默认行为
+
+          isDragging = true;
+          startX = e.clientX;
+          startY = e.clientY;
+          this.style.cursor = "grabbing";
+        });
+
+        // 拖动功能 - 鼠标移动
+        window.addEventListener("mousemove", function (e) {
+          if (!isDragging) return;
+
+          e.preventDefault();
+          translateX = lastTranslateX + (e.clientX - startX);
+          translateY = lastTranslateY + (e.clientY - startY);
+          updateImageTransform();
+        });
+
+        // 拖动功能 - 鼠标释放
+        window.addEventListener("mouseup", function () {
+          if (isDragging) {
+            isDragging = false;
+            lastTranslateX = translateX;
+            lastTranslateY = translateY;
+            modalImg.style.cursor = "move";
+          }
+        });
+
+        // 点击模态框空白区域关闭
+        modal.addEventListener("click", function (e) {
+          if (e.target === modal) {
+            closeModal();
+          }
+        });
+
+
+      });
     </script>
 </body>
 
