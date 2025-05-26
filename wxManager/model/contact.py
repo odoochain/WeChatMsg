@@ -77,6 +77,7 @@ class Person:
 wxid:{self.wxid}
 alias:{self.alias}
 nickname:{self.nickname}
+remark:{self.remark}
 gender:{self.gender}
 region:{self.region}
 signature:{self.signature}
