@@ -105,14 +105,14 @@ class HtmlExporter(ExporterBase):
 
             # Prepare messages for template
             message_records = []
-            dir_name, merged_msg_dir = build_merged_msg_dirname(merged_message)
+            dir_name, merged_msg_dir, relative_path = build_merged_msg_dirname(merged_message)
             for message in merged_message.messages:
                 message_record = {
                     "avatar_src": message.avatar_src,
                     "display_name": message.display_name,
                     "type": message.type,
                     "str_time": message.str_time,
-                    "files_dir": dir_name + '.files'
+                    "files_dir": relative_path
                 }
 
                 match message.type:
@@ -142,11 +142,12 @@ class HtmlExporter(ExporterBase):
             # Convert server_id to string and get last 6 digits, or use empty string if None
             shortened_server_id = str(merged_message.server_id)[-6:] if merged_message.server_id else ''
             dir_name = formatted_time + '-' + shortened_server_id
-            return dir_name, os.path.join(self.origin_path, dir_name + '.files')
+            relative_path = dir_name + '.files'
+            return dir_name, os.path.join(self.origin_path, relative_path), relative_path
 
 
         def create_merged_file(merged_message):
-            dir_name, merged_msg_dir = build_merged_msg_dirname(merged_message)
+            dir_name, merged_msg_dir, relative_path = build_merged_msg_dirname(merged_message)
             os.makedirs(merged_msg_dir, exist_ok=True)
 
             # Generate HTML file with the same name as the directory
@@ -160,7 +161,7 @@ class HtmlExporter(ExporterBase):
                 f.write(html_content)
 
         def parser_merged(merged_message):
-            dir_name, merged_msg_dir = build_merged_msg_dirname(merged_message)
+            dir_name, merged_msg_dir, relative_path = build_merged_msg_dirname(merged_message)
 
             for msg in merged_message.messages:
                 type_ = msg.type
@@ -169,74 +170,34 @@ class HtmlExporter(ExporterBase):
                     image_tasks.append(
                         (
                             os.path.join(Me().wx_dir, msg.path),
-                            os.path.join(image_dir, msg.str_time[:7]),
-                            msg.file_name
-                        )
-                    )
-                    image_tasks.append(
-                        (
-                            os.path.join(Me().wx_dir, msg.path),
                             merged_msg_dir,
                             msg.file_name
                         )
                     )
-                    ext = os.path.basename(msg.file_name).split('.')[-1]
-                    prefix = os.path.basename(msg.file_name).split('.')[0] 
-                    # image_tasks.append(
-                    #     (
-                    #         os.path.join(Me().wx_dir, msg.thumb_path),
-                    #         os.path.join(image_dir, msg.str_time[:7]),
-                    #         prefix + '_t.' + ext
-                    #     )
-                    # )
-
-                    msg.path = f"./image/{msg.str_time[:7]}/{msg.file_name}"
-                    msg.thumb_path = f"./image/{msg.str_time[:7]}/{prefix + '_t.' + ext}"
+                    msg.path = f"./{relative_path}/{msg.file_name}"
                 elif type_ == MessageType.File:
                     origin_file_path = os.path.join(Me().wx_dir, msg.path)
                     file_tasks.append(
                         (
                             origin_file_path,
-                            os.path.join(file_dir, msg.str_time[:7]),
-                            ''
-                        )
-                    )
-                    file_tasks.append(
-                        (
-                            origin_file_path,
                             merged_msg_dir,
                             ''
                         )
                     )
-                    msg.path = f'./file/{msg.str_time[:7]}/{os.path.basename(origin_file_path)}'
+                    msg.path = f'./{relative_path}/{os.path.basename(origin_file_path)}'
                 elif type_ == MessageType.Video:
                     msg.set_file_name()
                     video_tasks.append(
                         (
                             os.path.join(Me().wx_dir, msg.path),
-                            os.path.join(video_dir, msg.str_time[:7]),
-                            msg.file_name
-                        )
-                    )
-                    video_tasks.append(
-                        (
-                            os.path.join(Me().wx_dir, msg.path),
                             merged_msg_dir,
                             msg.file_name
                         )
                     )
-                    ext = os.path.basename(msg.path).split('.')[-1]
-                    msg.path = f'./video/{msg.str_time[:7]}/{msg.file_name}'
+                    msg.path = f'./{relative_path}/{msg.file_name}'
                 elif type_ == MessageType.Audio:
                     if isinstance(msg, AudioMessage):
                         msg.set_file_name()
-                        audio_tasks.append(
-                            (
-                                self.database.get_media_buffer(msg.server_id, self.contact.is_public()),
-                                os.path.join(audio_dir, msg.str_time[:7]),
-                                msg.file_name
-                            )
-                        )
                         audio_tasks.append(
                             (
                                 self.database.get_media_buffer(msg.server_id, self.contact.is_public()),
@@ -244,7 +205,7 @@ class HtmlExporter(ExporterBase):
                                 msg.file_name
                             )
                         )
-                        msg.path = f'./voice/{msg.str_time[:7]}/{msg.file_name + ".mp3"}'
+                        msg.path = f'./{relative_path}/{msg.file_name + ".mp3"}'
                 elif type_ == MessageType.MergedMessages:
                     parser_merged(msg)
 
@@ -267,38 +228,14 @@ class HtmlExporter(ExporterBase):
                 image_tasks.append(
                     (
                         os.path.join(Me().wx_dir, message.path),
-                        os.path.join(image_dir, message.str_time[:7]),
-                        message.file_name
-                    )
-                )
-                image_tasks.append(
-                    (
-                        os.path.join(Me().wx_dir, message.path),
                         self.origin_path,
                         message.file_name
                     )
                 )
-                ext = os.path.basename(message.file_name).split('.')[-1]
-                prefix = os.path.basename(message.file_name).split('.')[0]
-                # image_tasks.append(
-                #     (
-                #         os.path.join(Me().wx_dir, message.thumb_path),
-                #         os.path.join(image_dir, message.str_time[:7]),
-                #         prefix + '_t.' + ext
-                #     )
-                # )
-                message.path = f"./image/{message.str_time[:7]}/{message.file_name}"
-                message.thumb_path = f"./image/{message.str_time[:7]}/{prefix + '_t.' + ext}"
+                message.path = f"./{message.file_name}"
             elif type_ == MessageType.File:
                 FileIndex.append(msg_index)
                 origin_file_path = os.path.join(Me().wx_dir, message.path)
-                file_tasks.append(
-                    (
-                        origin_file_path,
-                        os.path.join(file_dir, message.str_time[:7]),
-                        ''
-                    )
-                )
                 file_tasks.append(
                     (
                         origin_file_path,
@@ -307,43 +244,28 @@ class HtmlExporter(ExporterBase):
                     )
                 )
                 if os.path.isfile(origin_file_path):
-                    message.path = f'./file/{message.str_time[:7]}/{os.path.basename(origin_file_path)}'
+                    message.path = f'./{os.path.basename(origin_file_path)}'
             elif type_ == MessageType.Video:
                 ImageIndex.append(msg_index)
                 message.set_file_name()
                 video_tasks.append(
                     (
                         os.path.join(Me().wx_dir, message.path),
-                        os.path.join(video_dir, message.str_time[:7]),
-                        message.file_name
-                    )
-                )
-                video_tasks.append(
-                    (
-                        os.path.join(Me().wx_dir, message.path),
                         self.origin_path,
                         message.file_name
                     )
                 )
-                ext = os.path.basename(message.path).split('.')[-1]
-                message.path = f'./video/{message.str_time[:7]}/{message.file_name}'
+                message.path = f'./{message.file_name}'
             elif type_ == MessageType.Audio:
                 message.set_file_name()
                 audio_tasks.append(
                     (
                         self.database.get_media_buffer(message.server_id, self.contact.is_public()),
-                        os.path.join(audio_dir, message.str_time[:7]),
-                        message.file_name
-                    )
-                )
-                audio_tasks.append(
-                    (
-                        self.database.get_media_buffer(message.server_id, self.contact.is_public()),
                         self.origin_path,
                         message.file_name
                     )
                 )
-                message.path = f'./voice/{message.str_time[:7]}/{message.file_name + ".mp3"}'
+                message.path = f'./{message.file_name + ".mp3"}'
             elif type_ == MessageType.LinkMessage or type_ == MessageType.LinkMessage2 or type_ == MessageType.LinkMessage4 or type_ == MessageType.LinkMessage5 or type_ == MessageType.LinkMessage6:
                 LinkIndex.append(msg_index)
             elif type_ == MessageType.Music:
@@ -387,10 +309,6 @@ class HtmlExporter(ExporterBase):
                 server_id_Page[str(server_id)] = curpage
                 server_id_Idx[str(server_id)] = select_msg_cnt - 1
 
-        # print(image_tasks)
-        # print(file_tasks)
-        # print(video_tasks)
-        # print(audio_tasks)
         logger.info('解析图片')
         # 使用多进程，导出所有图片
         batch_decode_image_multiprocessing(Me().xor_key, image_tasks)
