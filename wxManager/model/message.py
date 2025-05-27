@@ -92,6 +92,7 @@ class Message:
     sender_id: str  # 消息发送者的ID
     display_name: str  # 消息发送者的对外展示的昵称（备注名，群昵称）
     avatar_src: str  # 消息发送者头像
+    avatar_file_name: str  # 消息发送者头像文件名
     status: int  # 消息状态
     xml_content: str  # xml数据
 
@@ -110,6 +111,7 @@ class Message:
             'server_id': str(self.server_id),
             'display_name': self.display_name,
             'avatar_src': self.avatar_src,
+            'avatar_file_name': self.avatar_file_name,
             'xml_dict': xml_dict
         }
 

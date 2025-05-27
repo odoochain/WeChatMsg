@@ -3863,7 +3863,7 @@
                 // var avatar_path = '';
                 // // 使用示例
                 // var imageUrl = avatarPaths[message.avatar_path];
-                var imageUrl = message.avatar_src;
+                var imageUrl = message.avatar_file_name;
                 // checkImageExists(imageUrl, function (exists) {
                 //     if (exists) {
                 //         console.log('图片存在');
@@ -4796,7 +4796,7 @@
                 var OnePersonMsg = document.createElement('div');
                 OnePersonMsg.className = `OnePersonmsg`;
                 OnePersonMsg.innerHTML = `<div class="left">
-                    <div class="avatar"><img src="${message.messages[0].avatar_src}" loading="lazy"></div>
+                    <div class="avatar"><img src="${message.messages[0].avatar_file_name}" loading="lazy"></div>
                     </div>
                     `;
 
@@ -4816,7 +4816,7 @@
                         var OnePersonMsg = document.createElement('div');
                         OnePersonMsg.className = `OnePersonmsg`;
                         OnePersonMsg.innerHTML = `<div class="left">
-                            <div class="avatar"><img src="${record.avatar_src}" loading="lazy"></div>
+                            <div class="avatar"><img src="${record.avatar_file_name}" loading="lazy"></div>
                             </div>
                             `;
                         var OnePersonMsgRight = document.createElement('div');
@@ -5354,7 +5354,7 @@
             //     avatarTag.innerHTML = `<img src="${imageUrl}" loading="lazy" />`
             // });
 
-            var imageUrl = message.avatar_src;
+            var imageUrl = message.avatar_file_name;
             avatarTag.innerHTML = `<img src="${imageUrl}" loading="lazy" />`
 
             return avatarTag;

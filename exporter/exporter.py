@@ -9,6 +9,7 @@ import sys
 import time
 import traceback
 import datetime
+import requests
 
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from typing import List, Tuple
@@ -529,6 +530,35 @@ def copy_files(file_tasks: List[Tuple[str, str, str]]):
             for future in futures:
                 future.result()
 
+
+def download_file(url, file_name):
+    try:
+        response = requests.get(url)
+        if response.status_code == 200:
+            with open(file_name, 'wb') as f:
+                f.write(response.content)
+            return True
+        else:
+            return False
+    except Exception as e:
+        print(f"Error downloading file: {e}")
+        return False
+
+def fetch_avatars(avatar_tasks: {str: Tuple[str, str]}):
+    """
+    :param avatar_tasks: {wxid: Tuple[avatar_url, avatar_file_name]}
+    """
+    if len(avatar_tasks) < 1:
+        return
+    futures = []
+    with ThreadPoolExecutor(max_workers=10) as executor:
+        for wxid, (avatar_url, avatar_file_name) in avatar_tasks.items():
+
+            futures.append(executor.submit(download_file, avatar_url, avatar_file_name))
+
+            # 等待所有任务完成
+            for future in futures:
+                future.result()
 
 def get_ffmpeg_path():
     # 获取打包后的资源目录

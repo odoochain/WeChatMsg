@@ -5,10 +5,12 @@ import math
 import os
 import shutil
 import time
+import hashlib
+
 from wxManager.decrypt.decrypt_dat import batch_decode_image_multiprocessing
 from wxManager.log import logger
 from wxManager.model import MessageType, Me, AudioMessage
-from exporter.exporter import ExporterBase, copy_files, decode_audios, get_new_filename
+from exporter.exporter import ExporterBase, copy_files, decode_audios, get_new_filename, fetch_avatars
 from jinja2 import Template
 
 icon_files = {
@@ -86,10 +88,13 @@ class HtmlExporter(ExporterBase):
         video_tasks = []
         file_tasks = []
         audio_tasks = []
+        avatar_tasks = {}  # key: str, value: Tuple[str, str]
         image_dir = os.path.join(self.origin_path, 'image')
         video_dir = os.path.join(self.origin_path, 'video')
         audio_dir = os.path.join(self.origin_path, 'voice')
         file_dir = os.path.join(self.origin_path, 'file')
+        avatar_relative_dir = 'avatar'
+        avatar_dir = os.path.join(self.origin_path, avatar_relative_dir)
         total_steps = len(messages)
         select_msg_cnt = 0  # 要导出的消息数量
         msg_index = 0
@@ -109,6 +114,7 @@ class HtmlExporter(ExporterBase):
             for message in merged_message.messages:
                 message_record = {
                     "avatar_src": message.avatar_src,
+                    "avatar_file_name": message.avatar_file_name,
                     "display_name": message.display_name,
                     "type": message.type,
                     "str_time": message.str_time,
@@ -164,6 +170,7 @@ class HtmlExporter(ExporterBase):
             dir_name, merged_msg_dir, relative_path = build_merged_msg_dirname(merged_message)
 
             for msg in merged_message.messages:
+                process_avatar(msg, avatar_tasks, avatar_dir)
                 type_ = msg.type
                 if type_ == MessageType.Image:
                     msg.set_file_name()
@@ -211,6 +218,13 @@ class HtmlExporter(ExporterBase):
 
             create_merged_file(merged_message)
 
+        def process_avatar(message, avatar_tasks, avatar_dir):
+            if hasattr(message, 'avatar_src') and message.avatar_src:
+                avatar_md5 = hashlib.md5(message.avatar_src.encode()).hexdigest()
+                avatar_filename = f"{avatar_md5}.jfif"
+                avatar_filepath = os.path.join(avatar_dir, avatar_filename)
+                avatar_tasks[avatar_md5] = (message.avatar_src, avatar_filepath)
+                message.avatar_file_name = f'./{avatar_relative_dir}/{avatar_filename}'
 
         for index in range(start, min(start + step, len(messages))):
             message = messages[index]
@@ -222,6 +236,10 @@ class HtmlExporter(ExporterBase):
             if not self.is_selected(message):
                 continue
             server_id = message.server_id
+
+            # Extract avatar_src from message, add to avatar_tasks
+            process_avatar(message, avatar_tasks, avatar_dir)
+
             if type_ == MessageType.Image:
                 ImageIndex.append(msg_index)
                 message.set_file_name()
@@ -319,6 +337,8 @@ class HtmlExporter(ExporterBase):
         print('开始导出语音')
         logger.info('开始导出语音')
         decode_audios(audio_tasks)
+        logger.info('开始导出头像')
+        fetch_avatars(avatar_tasks)
 
         AllIndex = list(range(len(html_json)))
 
