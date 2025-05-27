@@ -146,7 +146,7 @@ class HtmlExporter(ExporterBase):
             formatted_time = merged_message.str_time.replace('-', '').replace(' ', '-').replace(':', '')
             # Only use the last 6 digits of server_id
             # Convert server_id to string and get last 6 digits, or use empty string if None
-            shortened_server_id = str(merged_message.server_id)[-6:] if merged_message.server_id else ''
+            shortened_server_id = str(merged_message.server_id)[-6:] if merged_message.server_id else str(merged_message.timestamp)
             dir_name = formatted_time + '-' + shortened_server_id
             relative_path = dir_name + '.files'
             return dir_name, os.path.join(self.origin_path, relative_path), relative_path
