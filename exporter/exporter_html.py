@@ -7,7 +7,7 @@ import shutil
 import time
 from wxManager.decrypt.decrypt_dat import batch_decode_image_multiprocessing
 from wxManager.log import logger
-from wxManager.model import MessageType, Me
+from wxManager.model import MessageType, Me, AudioMessage
 from exporter.exporter import ExporterBase, copy_files, decode_audios, get_new_filename
 from jinja2 import Template
 
@@ -228,22 +228,23 @@ class HtmlExporter(ExporterBase):
                     ext = os.path.basename(msg.path).split('.')[-1]
                     msg.path = f'./video/{msg.str_time[:7]}/{msg.file_name}'
                 elif type_ == MessageType.Audio:
-                    msg.set_file_name()
-                    audio_tasks.append(
-                        (
-                            self.database.get_media_buffer(msg.server_id, self.contact.is_public()),
-                            os.path.join(audio_dir, msg.str_time[:7]),
-                            msg.file_name
+                    if isinstance(msg, AudioMessage):
+                        msg.set_file_name()
+                        audio_tasks.append(
+                            (
+                                self.database.get_media_buffer(msg.server_id, self.contact.is_public()),
+                                os.path.join(audio_dir, msg.str_time[:7]),
+                                msg.file_name
+                            )
                         )
-                    )
-                    audio_tasks.append(
-                        (
-                            self.database.get_media_buffer(msg.server_id, self.contact.is_public()),
-                            self.origin_path,
-                            msg.file_name
+                        audio_tasks.append(
+                            (
+                                self.database.get_media_buffer(msg.server_id, self.contact.is_public()),
+                                self.origin_path,
+                                msg.file_name
+                            )
                         )
-                    )
-                    msg.path = f'./voice/{msg.str_time[:7]}/{msg.file_name + ".mp3"}'
+                        msg.path = f'./voice/{msg.str_time[:7]}/{msg.file_name + ".mp3"}'
                 elif type_ == MessageType.MergedMessages:
                     parser_merged(msg)
 
