@@ -43,7 +43,7 @@ def export():
         output_dir=output_dir,
         type_=FileType.HTML,
         message_types=None,  # 要导出的消息类型，默认全导出
-        time_range=['2020-01-01 00:00:00', '2035-03-12 00:00:00'],  # 要导出的日期范围，默认全导出
+        time_range=['2012-01-01 00:00:00', '2099-03-12 00:00:00'],  # 要导出的日期范围，默认全导出
         group_members=None  # 指定导出群聊里某个或者几个群成员的聊天记录
     )
 
@@ -74,7 +74,7 @@ def batch_export():
             output_dir=output_dir,
             type_=FileType.HTML,
             message_types={MessageType.Text, MessageType.Image, MessageType.LinkMessage},  # 要导出的消息类型，默认全导出
-            time_range=['2020-01-01 00:00:00', '2035-03-12 00:00:00'],  # 要导出的日期范围，默认全导出
+            time_range=['2012-01-01 00:00:00', '2099-03-12 00:00:00'],  # 要导出的日期范围，默认全导出
             group_members=None  # 指定导出群聊里某个或者几个群成员的聊天记录
         )
 
@@ -116,7 +116,7 @@ def batch_export_by_fmt():
             output_dir=output_dir,
             type_=file_type,
             message_types=None,  # 要导出的消息类型，默认全导出
-            time_range=['2020-01-01 00:00:00', '2035-03-12 00:00:00'],  # 要导出的日期范围，默认全导出
+            time_range=['2012-01-01 00:00:00', '2099-03-12 00:00:00'],  # 要导出的日期范围，默认全导出
             group_members=None  # 指定导出群聊里某个或者几个群成员的聊天记录
         )
 
