@@ -4362,7 +4362,7 @@
             function messageMergeCard(message, zindex=1, index=0) {
                 const messageMergeCardTag = document.createElement('div');
                 messageMergeCardTag.className = `merge-message`;
-                console.log("mergeMessage", message);
+                // console.log("mergeMessage", message);
                 if (message.description && message.description !== null) {
                     const splitResults = message.description.split("\n");
                     const firstTwoItems = splitResults.slice(0, 2);
@@ -4845,8 +4845,8 @@
             // 从数据列表中取出对应范围的元素并添加到容器中
             for (let i = startIndex; i < endIndex && i < ChatMsgIndex.length; i++) {
                 const message = chatMessages[ChatMsgIndex[i]];
-                console.log(message.type);
-                console.log(message);
+                // console.log(message.type);
+                // console.log(message);
                 add5MinTimeTag(message);
                 const messageElement = document.createElement('div'); // 下面那俩的合体
                 const avatarTag = avatarBox(message); // 头像
