@@ -21,8 +21,8 @@ def verify_source_file(full_path):
         for file in files:
             if file == file_name:
                 found_path = os.path.join(root, file)
-                print(f'找不到文件:{full_path}')
-                print(f'重定位文件:{found_path}')
+                print(f'---找不到文件:{full_path}')
+                print(f'+++重定位文件:{found_path}')
                 return found_path
                 
     return ''

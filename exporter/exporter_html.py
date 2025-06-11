@@ -175,10 +175,10 @@ class HtmlExporter(ExporterBase):
                 type_ = msg.type
                 if type_ == MessageType.Image:
                     msg.set_file_name()
-                    full_path = os.path.join(Me().wx_dir, msg.path)
-                    full_path = verify_source_file(full_path)
+                    origin_file_path = os.path.join(Me().wx_dir, msg.path)
+                    full_path = verify_source_file(origin_file_path)
                     if full_path == '':
-                        print(f'复制错误:{full_path} 源文件不存在')
+                        print(f'复制错误:{origin_file_path} 源文件不存在')
                     else:
                         image_tasks.append(
                             (
@@ -192,7 +192,7 @@ class HtmlExporter(ExporterBase):
                     origin_file_path = os.path.join(Me().wx_dir, msg.path)
                     full_path = verify_source_file(origin_file_path)
                     if full_path == '':
-                        print(f'复制错误:{full_path} 源文件不存在')
+                        print(f'复制错误:{origin_file_path} 源文件不存在')
                     else:
                         file_tasks.append(
                             (
@@ -204,10 +204,10 @@ class HtmlExporter(ExporterBase):
                     msg.path = f'./{relative_path}/{os.path.basename(origin_file_path)}'
                 elif type_ == MessageType.Video:
                     msg.set_file_name()
-                    full_path = os.path.join(Me().wx_dir, msg.path)
-                    full_path = verify_source_file(full_path)
+                    origin_file_path = os.path.join(Me().wx_dir, msg.path)
+                    full_path = verify_source_file(origin_file_path)
                     if full_path == '':
-                        print(f'复制错误:{full_path} 源文件不存在')
+                        print(f'复制错误:{origin_file_path} 源文件不存在')
                     else:
                         video_tasks.append(
                             (
@@ -258,10 +258,10 @@ class HtmlExporter(ExporterBase):
             if type_ == MessageType.Image:
                 ImageIndex.append(msg_index)
                 message.set_file_name()
-                full_path = os.path.join(Me().wx_dir, message.path)
-                full_path = verify_source_file(full_path)
+                origin_file_path = os.path.join(Me().wx_dir, message.path)
+                full_path = verify_source_file(origin_file_path)
                 if full_path == '':
-                    print(f'复制错误:{full_path} 源文件不存在')
+                    print(f'复制错误:{origin_file_path} 源文件不存在')
                 else:
                     image_tasks.append(
                         (
@@ -273,10 +273,10 @@ class HtmlExporter(ExporterBase):
                 message.path = f"./{message.file_name}"
             elif type_ == MessageType.File:
                 FileIndex.append(msg_index)
-                full_path = os.path.join(Me().wx_dir, message.path)
-                full_path = verify_source_file(full_path)
+                origin_file_path = os.path.join(Me().wx_dir, message.path)
+                full_path = verify_source_file(origin_file_path)
                 if full_path == '':
-                    print(f'复制错误:{full_path} 源文件不存在')
+                    print(f'复制错误:{origin_file_path} 源文件不存在')
                 else:
                     file_tasks.append(
                         (
@@ -290,10 +290,10 @@ class HtmlExporter(ExporterBase):
             elif type_ == MessageType.Video:
                 ImageIndex.append(msg_index)
                 message.set_file_name()
-                full_path = os.path.join(Me().wx_dir, message.path)
-                full_path = verify_source_file(full_path)
+                origin_file_path = os.path.join(Me().wx_dir, message.path)
+                full_path = verify_source_file(origin_file_path)
                 if full_path == '':
-                    print(f'复制错误:{full_path} 源文件不存在')
+                    print(f'复制错误:{origin_file_path} 源文件不存在')
                 else:
                     video_tasks.append(
                         (
@@ -305,10 +305,10 @@ class HtmlExporter(ExporterBase):
                 message.path = f'./{message.file_name}'
             elif type_ == MessageType.Audio:
                 message.set_file_name()
-                full_path = os.path.join(Me().wx_dir, message.path)
-                full_path = verify_source_file(full_path)
+                origin_file_path = os.path.join(Me().wx_dir, message.path)
+                full_path = verify_source_file(origin_file_path)
                 if full_path == '':
-                    print(f'复制错误:{full_path} 源文件不存在')
+                    print(f'复制错误:{origin_file_path} 源文件不存在')
                 else:
                     audio_tasks.append(
                         (
