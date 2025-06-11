@@ -583,7 +583,7 @@ class MergedMessageFactory(MessageFactory, Singleton):
                                                                  thumb=True, talker_username=username)
                     if not os.path.exists(os.path.join(Me().wx_dir, inner_msg.path)) or inner_msg.path == '.':
                         inner_msg.path = f'FileStorage/MsgAttach/{hashlib.md5(username.encode("utf-8")).hexdigest()}/Thumb/{month}/{inner_msg.md5}_{2}.dat'
-                    print(inner_msg.path)
+                    logger.debug(inner_msg.path)
                 elif inner_msg.type == MessageType.Video:
                     if dir0:
                         inner_msg.path = os.path.join('msg', 'attach',

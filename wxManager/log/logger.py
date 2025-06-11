@@ -5,7 +5,7 @@ import traceback
 from functools import wraps
 filename = time.strftime("%Y-%m-%d", time.localtime(time.time()))
 logger = logging.getLogger('test')
-logger.setLevel(level=logging.DEBUG)
+logger.setLevel(level=logging.INFO)
 formatter = logging.Formatter('%(asctime)s - %(filename)s[line:%(lineno)d] - %(levelname)s: %(message)s')
 try:
     if not os.path.exists('./app/log/logs'):
@@ -17,7 +17,7 @@ except:
 file_handler.setLevel(level=logging.INFO)
 file_handler.setFormatter(formatter)
 stream_handler = logging.StreamHandler()
-stream_handler.setLevel(logging.DEBUG)
+stream_handler.setLevel(logging.INFO)
 stream_handler.setFormatter(formatter)
 logger.addHandler(file_handler)
 logger.addHandler(stream_handler)

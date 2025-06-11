@@ -1,4 +1,5 @@
 import os
+from wxManager.log import logger
 def verify_source_file(full_path):
     """
     Verify if a file exists at the given path. If not, search for it in parent directory and its subdirectories.
@@ -17,13 +18,13 @@ def verify_source_file(full_path):
     file_name = os.path.basename(full_path)
     parent_dir = os.path.dirname(os.path.dirname(full_path))
     
-    print(f'---找不到文件:{full_path}，开始搜索')
+    logger.debug(f'---找不到文件:{full_path}，开始搜索')
     # Walk through all directories and subdirectories
     for root, _, files in os.walk(parent_dir):
         for file in files:
             if file == file_name:
                 found_path = os.path.join(root, file)
-                print(f'+++重定位文件:{found_path}')
+                logger.debug(f'+++重定位文件:{found_path}')
                 return found_path
-    print(f'***搜索结束，未找到文件:{full_path}')            
+    logger.debug(f'***搜索结束，未找到文件:{full_path}')            
     return ''

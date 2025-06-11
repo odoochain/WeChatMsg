@@ -496,11 +496,13 @@ def copy_file(source_file, destination_file):
             # logger.info(f'开始复制:{destination_file}')
             shutil.copy(source_file, destination_file)
         except:
+            print(f'复制错误:{destination_file}')
             pass
             # logger.error(traceback.format_exc())
         finally:
-            print(f'复制:{destination_file}')
+            # print(f'复制:{destination_file}')
             # logger.info(f'复制:{destination_file}')
+            pass
 
 
 def copy_files(file_tasks: List[Tuple[str, str, str]]):
