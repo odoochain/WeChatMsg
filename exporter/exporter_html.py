@@ -12,6 +12,7 @@ from wxManager.log import logger
 from wxManager.model import MessageType, Me, AudioMessage
 from exporter.exporter import ExporterBase, copy_files, decode_audios, get_new_filename, fetch_avatars
 from jinja2 import Template
+from utils.sourcefile_util import verify_source_file
 
 icon_files = {
     'DOCX': ['doc', 'docx'],
@@ -174,33 +175,47 @@ class HtmlExporter(ExporterBase):
                 type_ = msg.type
                 if type_ == MessageType.Image:
                     msg.set_file_name()
-                    image_tasks.append(
-                        (
-                            os.path.join(Me().wx_dir, msg.path),
-                            merged_msg_dir,
-                            msg.file_name
+                    full_path = os.path.join(Me().wx_dir, msg.path)
+                    full_path = verify_source_file(full_path)
+                    if full_path == '':
+                        print(f'复制错误:{full_path} 源文件不存在')
+                    else:
+                        image_tasks.append(
+                            (
+                                full_path,
+                                merged_msg_dir,
+                                msg.file_name
+                            )
                         )
-                    )
                     msg.path = f"./{relative_path}/{msg.file_name}"
                 elif type_ == MessageType.File:
                     origin_file_path = os.path.join(Me().wx_dir, msg.path)
-                    file_tasks.append(
-                        (
-                            origin_file_path,
-                            merged_msg_dir,
-                            ''
+                    full_path = verify_source_file(origin_file_path)
+                    if full_path == '':
+                        print(f'复制错误:{full_path} 源文件不存在')
+                    else:
+                        file_tasks.append(
+                            (
+                                full_path,
+                                merged_msg_dir,
+                                ''
+                            )
                         )
-                    )
                     msg.path = f'./{relative_path}/{os.path.basename(origin_file_path)}'
                 elif type_ == MessageType.Video:
                     msg.set_file_name()
-                    video_tasks.append(
-                        (
-                            os.path.join(Me().wx_dir, msg.path),
-                            merged_msg_dir,
-                            msg.file_name
+                    full_path = os.path.join(Me().wx_dir, msg.path)
+                    full_path = verify_source_file(full_path)
+                    if full_path == '':
+                        print(f'复制错误:{full_path} 源文件不存在')
+                    else:
+                        video_tasks.append(
+                            (
+                                full_path,
+                                merged_msg_dir,
+                                msg.file_name
+                            )
                         )
-                    )
                     msg.path = f'./{relative_path}/{msg.file_name}'
                 elif type_ == MessageType.Audio:
                     if isinstance(msg, AudioMessage):
@@ -243,46 +258,65 @@ class HtmlExporter(ExporterBase):
             if type_ == MessageType.Image:
                 ImageIndex.append(msg_index)
                 message.set_file_name()
-                image_tasks.append(
-                    (
-                        os.path.join(Me().wx_dir, message.path),
-                        self.origin_path,
-                        message.file_name
+                full_path = os.path.join(Me().wx_dir, message.path)
+                full_path = verify_source_file(full_path)
+                if full_path == '':
+                    print(f'复制错误:{full_path} 源文件不存在')
+                else:
+                    image_tasks.append(
+                        (
+                            full_path,
+                            self.origin_path,
+                            message.file_name
+                        )
                     )
-                )
                 message.path = f"./{message.file_name}"
             elif type_ == MessageType.File:
                 FileIndex.append(msg_index)
-                origin_file_path = os.path.join(Me().wx_dir, message.path)
-                file_tasks.append(
-                    (
-                        origin_file_path,
-                        self.origin_path,
-                        ''
+                full_path = os.path.join(Me().wx_dir, message.path)
+                full_path = verify_source_file(full_path)
+                if full_path == '':
+                    print(f'复制错误:{full_path} 源文件不存在')
+                else:
+                    file_tasks.append(
+                        (
+                            full_path,
+                            self.origin_path,
+                            ''
+                        )
                     )
-                )
                 if os.path.isfile(origin_file_path):
                     message.path = f'./{os.path.basename(origin_file_path)}'
             elif type_ == MessageType.Video:
                 ImageIndex.append(msg_index)
                 message.set_file_name()
-                video_tasks.append(
-                    (
-                        os.path.join(Me().wx_dir, message.path),
-                        self.origin_path,
-                        message.file_name
+                full_path = os.path.join(Me().wx_dir, message.path)
+                full_path = verify_source_file(full_path)
+                if full_path == '':
+                    print(f'复制错误:{full_path} 源文件不存在')
+                else:
+                    video_tasks.append(
+                        (
+                            full_path,
+                            self.origin_path,
+                            message.file_name
+                        )
                     )
-                )
                 message.path = f'./{message.file_name}'
             elif type_ == MessageType.Audio:
                 message.set_file_name()
-                audio_tasks.append(
-                    (
-                        self.database.get_media_buffer(message.server_id, self.contact.is_public()),
-                        self.origin_path,
-                        message.file_name
+                full_path = os.path.join(Me().wx_dir, message.path)
+                full_path = verify_source_file(full_path)
+                if full_path == '':
+                    print(f'复制错误:{full_path} 源文件不存在')
+                else:
+                    audio_tasks.append(
+                        (
+                            full_path,
+                            self.origin_path,
+                            message.file_name
+                        )
                     )
-                )
                 message.path = f'./{message.file_name + ".mp3"}'
             elif type_ == MessageType.LinkMessage or type_ == MessageType.LinkMessage2 or type_ == MessageType.LinkMessage4 or type_ == MessageType.LinkMessage5 or type_ == MessageType.LinkMessage6:
                 LinkIndex.append(msg_index)
