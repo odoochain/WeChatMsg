@@ -489,7 +489,7 @@ class CsvAllExporter(ExporterBaseBase):
 
 def copy_file(source_file, destination_file):
     if not os.path.isfile(source_file):
-        print(f'复制错误:{source_file} 源文件不存在')
+        print(f'复制错误:{source_file} copy 源文件不存在')
         return  
     if os.path.isfile(source_file) and not os.path.exists(destination_file):
         try:

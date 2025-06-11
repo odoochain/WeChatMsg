@@ -178,7 +178,7 @@ class HtmlExporter(ExporterBase):
                     origin_file_path = os.path.join(Me().wx_dir, msg.path)
                     full_path = verify_source_file(origin_file_path)
                     if full_path == '':
-                        print(f'复制错误:{origin_file_path} 源文件不存在')
+                        print(f'复制错误:{origin_file_path} 合并消息中 Image 源文件不存在')
                     else:
                         image_tasks.append(
                             (
@@ -192,7 +192,7 @@ class HtmlExporter(ExporterBase):
                     origin_file_path = os.path.join(Me().wx_dir, msg.path)
                     full_path = verify_source_file(origin_file_path)
                     if full_path == '':
-                        print(f'复制错误:{origin_file_path} 源文件不存在')
+                        print(f'复制错误:{origin_file_path} 合并消息中 File 源文件不存在')
                     else:
                         file_tasks.append(
                             (
@@ -207,7 +207,7 @@ class HtmlExporter(ExporterBase):
                     origin_file_path = os.path.join(Me().wx_dir, msg.path)
                     full_path = verify_source_file(origin_file_path)
                     if full_path == '':
-                        print(f'复制错误:{origin_file_path} 源文件不存在')
+                        print(f'复制错误:{origin_file_path} 合并消息中 Video 源文件不存在')
                     else:
                         video_tasks.append(
                             (
@@ -261,7 +261,7 @@ class HtmlExporter(ExporterBase):
                 origin_file_path = os.path.join(Me().wx_dir, message.path)
                 full_path = verify_source_file(origin_file_path)
                 if full_path == '':
-                    print(f'复制错误:{origin_file_path} 源文件不存在')
+                    print(f'复制错误:{origin_file_path} Image 源文件不存在')
                 else:
                     image_tasks.append(
                         (
@@ -276,7 +276,7 @@ class HtmlExporter(ExporterBase):
                 origin_file_path = os.path.join(Me().wx_dir, message.path)
                 full_path = verify_source_file(origin_file_path)
                 if full_path == '':
-                    print(f'复制错误:{origin_file_path} 源文件不存在')
+                    print(f'复制错误:{origin_file_path} File 源文件不存在')
                 else:
                     file_tasks.append(
                         (
@@ -293,7 +293,7 @@ class HtmlExporter(ExporterBase):
                 origin_file_path = os.path.join(Me().wx_dir, message.path)
                 full_path = verify_source_file(origin_file_path)
                 if full_path == '':
-                    print(f'复制错误:{origin_file_path} 源文件不存在')
+                    print(f'复制错误:{origin_file_path} Video 源文件不存在')
                 else:
                     video_tasks.append(
                         (
@@ -305,18 +305,13 @@ class HtmlExporter(ExporterBase):
                 message.path = f'./{message.file_name}'
             elif type_ == MessageType.Audio:
                 message.set_file_name()
-                origin_file_path = os.path.join(Me().wx_dir, message.path)
-                full_path = verify_source_file(origin_file_path)
-                if full_path == '':
-                    print(f'复制错误:{origin_file_path} 源文件不存在')
-                else:
-                    audio_tasks.append(
-                        (
-                            full_path,
-                            self.origin_path,
-                            message.file_name
-                        )
+                audio_tasks.append(
+                    (
+                        self.database.get_media_buffer(message.server_id, self.contact.is_public()),
+                        self.origin_path,
+                        message.file_name
                     )
+                )
                 message.path = f'./{message.file_name + ".mp3"}'
             elif type_ == MessageType.LinkMessage or type_ == MessageType.LinkMessage2 or type_ == MessageType.LinkMessage4 or type_ == MessageType.LinkMessage5 or type_ == MessageType.LinkMessage6:
                 LinkIndex.append(msg_index)
