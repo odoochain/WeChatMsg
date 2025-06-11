@@ -178,7 +178,7 @@ class HtmlExporter(ExporterBase):
                     origin_file_path = os.path.join(Me().wx_dir, msg.path)
                     full_path = verify_source_file(origin_file_path)
                     if full_path == '':
-                        print(f'复制错误:{origin_file_path} 合并消息中 Image 源文件不存在')
+                        print(f'合并消息{merged_message.str_time}中{msg.str_time} Image 源文件 {origin_file_path} 不存在')
                     else:
                         image_tasks.append(
                             (
@@ -192,7 +192,7 @@ class HtmlExporter(ExporterBase):
                     origin_file_path = os.path.join(Me().wx_dir, msg.path)
                     full_path = verify_source_file(origin_file_path)
                     if full_path == '':
-                        print(f'复制错误:{origin_file_path} 合并消息中 File 源文件不存在')
+                        print(f'合并消息{merged_message.str_time}中{msg.str_time} File 源文件 {origin_file_path} 不存在')
                     else:
                         file_tasks.append(
                             (
@@ -207,7 +207,7 @@ class HtmlExporter(ExporterBase):
                     origin_file_path = os.path.join(Me().wx_dir, msg.path)
                     full_path = verify_source_file(origin_file_path)
                     if full_path == '':
-                        print(f'复制错误:{origin_file_path} 合并消息中 Video 源文件不存在')
+                        print(f'合并消息{merged_message.str_time}中{msg.str_time} Video 源文件 {origin_file_path} 不存在')
                     else:
                         video_tasks.append(
                             (
@@ -261,7 +261,7 @@ class HtmlExporter(ExporterBase):
                 origin_file_path = os.path.join(Me().wx_dir, message.path)
                 full_path = verify_source_file(origin_file_path)
                 if full_path == '':
-                    print(f'复制错误:{origin_file_path} Image 源文件不存在')
+                    print(f'消息{message.str_time}中 Image 源文件 {origin_file_path} 不存在')
                 else:
                     image_tasks.append(
                         (
@@ -276,7 +276,7 @@ class HtmlExporter(ExporterBase):
                 origin_file_path = os.path.join(Me().wx_dir, message.path)
                 full_path = verify_source_file(origin_file_path)
                 if full_path == '':
-                    print(f'复制错误:{origin_file_path} File 源文件不存在')
+                    print(f'消息{message.str_time}中 File 源文件 {origin_file_path} 不存在')
                 else:
                     file_tasks.append(
                         (
@@ -293,7 +293,7 @@ class HtmlExporter(ExporterBase):
                 origin_file_path = os.path.join(Me().wx_dir, message.path)
                 full_path = verify_source_file(origin_file_path)
                 if full_path == '':
-                    print(f'复制错误:{origin_file_path} Video 源文件不存在')
+                    print(f'消息{message.str_time}中 Video 源文件 {origin_file_path} 不存在')
                 else:
                     video_tasks.append(
                         (

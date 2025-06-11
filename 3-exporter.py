@@ -28,9 +28,9 @@ def export():
     db_dir = './output/silenwoods/Msg'  # 解析后的数据库路径，例如：./db_storage
     db_version = 3  # 数据库版本，4 or 3
 
-    wxid = 'wxid_10bgyb9gnn8r22'  # 01-自己
+    # wxid = 'wxid_10bgyb9gnn8r22'  # 01-自己
     # wxid = '46297398354@chatroom'  # export
-    # wxid = '44353031172@chatroom' # backup
+    wxid = '44353031172@chatroom' # backup
     
     output_dir = './output/data/'  # 输出文件夹
 
