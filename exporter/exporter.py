@@ -488,6 +488,9 @@ class CsvAllExporter(ExporterBaseBase):
 
 
 def copy_file(source_file, destination_file):
+    if not os.path.isfile(source_file):
+        print(f'复制错误:{source_file} 源文件不存在')
+        return  
     if os.path.isfile(source_file) and not os.path.exists(destination_file):
         try:
             # logger.info(f'开始复制:{destination_file}')
@@ -581,6 +584,7 @@ def decode_audio_to_mp3(media_buffer, output_dir, filename):
         os.makedirs(output_dir, exist_ok=True)
     buf = media_buffer
     if not buf:
+        print(f'音频文件不存在：{media_buffer}')
         return ''
     with open(silk_path, "wb") as f:
         f.write(buf)

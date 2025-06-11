@@ -74,10 +74,13 @@ def decode_dat(xor_key: int, file_path, out_path, dst_name='') -> str | bytes:
     :param xor_key: 异或加密密钥
     """
     if not os.path.exists(file_path) or os.path.isdir(file_path):
+        print(f'[*] 文件不存在或为文件夹: {file_path}')
         return ''
     if not os.path.exists(out_path):
+        print(f'[*] 输出路径不存在: {out_path}')
         os.makedirs(out_path, exist_ok=True)
     if not os.path.isdir(out_path):
+        print(f'[*] 输出路径不是文件夹: {out_path}')
         return ''
     # print(file_path,out_path,dst_name)
     with open(file_path, 'rb') as file_in:
