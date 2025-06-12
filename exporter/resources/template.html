@@ -1346,7 +1346,7 @@
 
         .displayname {
             margin-left: 13px;
-            margin-left: 13px;
+            margin-right: 13px;
             font-size: 13px;
             margin-bottom: 5px;
             color: darkgray;
@@ -2287,7 +2287,6 @@
         .merge-message {
             position: relative;
             width: 220px;
-            height: 110px;
             border-radius: 5px;
             background-color: #fff;
         }
@@ -3843,7 +3842,7 @@
             function displayNameBox(message) {
                 const displayName = document.createElement('div');
                 displayName.className = "displayname";
-                displayName.innerHTML = message.display_name;
+                displayName.innerHTML = message.display_name + "  (" + timestampToTime(message.timestamp) + ")";
                 return displayName;
             }
             // function checkImageExists(url, callback) {
@@ -4853,9 +4852,7 @@
                 const messageContent = document.createElement('div'); // 除了avatar之外的所有
                 messageElement.setAttribute('id', message.server_id);
                 const side = message.is_send ? "right" : "left";
-                if (isChatroom && !message.is_send) {
-                        messageContent.appendChild(displayNameBox(message));
-                    }
+                messageContent.appendChild(displayNameBox(message));
 
                 const params = {
                     message,           // 消息对象
