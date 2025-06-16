@@ -2413,11 +2413,25 @@
         }
 
         .modal-container {
-            /* display: flex; */
-            /* position: fixed; */
             height: 90%;
-            overflow: hidden;
-            overflow-y: auto;
+            overflow-y: scroll;
+            scrollbar-width: auto; /* Firefox */
+            -ms-overflow-style: auto; /* IE and Edge */
+            
+            /* For Webkit browsers like Chrome/Safari */
+            &::-webkit-scrollbar {
+                width: 8px;
+                display: block;
+            }
+            
+            &::-webkit-scrollbar-track {
+                background: #f1f1f1;
+            }
+            
+            &::-webkit-scrollbar-thumb {
+                background: #888;
+                border-radius: 4px;
+            }
         }
 
         .modal-container .OnePersonmsg {
